@@ -40,26 +40,33 @@ class MainActivity : AppCompatActivity() {
         submitBtn = findViewById(R.id.btSubmit)
         submitBtn.setOnClickListener {
             if(usernameAccepted(userName.text.toString()) && passwordAccepted(password.text.toString())){
-                Toast.makeText(this, "User created!", Toast.LENGTH_LONG).show()
-                users.add(userName.text.toString().capitalize())
-                displayUsers()
+                if(password.text.toString() == password2.text.toString()){
+                    Toast.makeText(this, "User created!", Toast.LENGTH_LONG).show()
+                    users.add(userName.text.toString().capitalize())
+                    displayUsers()
+                }else{
+                    Toast.makeText(this, "The passwords do not match", Toast.LENGTH_LONG).show()
+                }
             }
         }
         activeUsers = findViewById(R.id.tvActiveUsers)
     }
 
     private fun usernameAccepted(text: String): Boolean{
-        if(text !in users){
+        if(text.capitalize() !in users){
             if(text.length in 5..15){
                 if(!hasNumber(text)){
                     if(!hasSpecial(text) && !text.contains(" ")){
                         return true
                     }
                     Toast.makeText(this, "The username cannot contain special characters or spaces", Toast.LENGTH_LONG).show()
+                    return false
                 }
                 Toast.makeText(this, "The username cannot contain numbers", Toast.LENGTH_LONG).show()
+                return false
             }
             Toast.makeText(this, "The username must be between 5 and 15 characters long", Toast.LENGTH_LONG).show()
+            return false
         }
         Toast.makeText(this, "The username is already taken", Toast.LENGTH_LONG).show()
         return false
@@ -73,10 +80,13 @@ class MainActivity : AppCompatActivity() {
                         return true
                     }
                     Toast.makeText(this, "The password must contain a special character", Toast.LENGTH_LONG).show()
+                    return false
                 }
                 Toast.makeText(this, "The password must contain a number", Toast.LENGTH_LONG).show()
+                return false
             }
             Toast.makeText(this, "The password must contain an uppercase letter", Toast.LENGTH_LONG).show()
+            return false
         }
         Toast.makeText(this, "The password must be at least 8 characters long", Toast.LENGTH_LONG).show()
         return false
@@ -85,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     private fun hasUpper(text: String): Boolean{
         var letter = 'A'
         while (letter <= 'Z') {
-            if(text[0] == letter){
+            if(text.contains(letter)){
                 return true
             }
             ++letter
@@ -119,5 +129,6 @@ class MainActivity : AppCompatActivity() {
         }
         activeUsers.text = allUsers
         activeUsers.isVisible = true
+        llMain.isVisible = false
     }
 }
